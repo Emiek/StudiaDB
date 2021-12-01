@@ -1,0 +1,211 @@
+select avg(waga) from kreatura WHERE rodzaj LIKE 'wiking';
++-----------+
+| avg(waga) |
++-----------+
+|   95.1111 |
++-----------+
+
+select rodzaj, avg(waga) as serdnia_waga,count(rodzaj) as liczba from kreatura GROUP BY rodzaj ;
++---------+--------------+--------+
+| rodzaj  | serdnia_waga | liczba |
++---------+--------------+--------+
+| wiking  |      95.1111 |      9 |
+| ryba    |    1050.5000 |      2 |
+| waz     |       3.0000 |      1 |
+| ptak    |       2.0000 |      2 |
+| wiedzma |      41.2500 |      4 |
+| malpa   |      32.0000 |      1 |
++---------+--------------+--------+
+
+select rodzaj, avg(2021-YEAR(dataUr)) as sredni_wiek from kreatura GROUP BY rodzaj ;
++---------+-------------+
+| rodzaj  | sredni_wiek |
++---------+-------------+
+| wiking  |    350.5556 |
+| ryba    |    345.5000 |
+| waz     |    344.0000 |
+| ptak    |    345.5000 |
+| wiedzma |    529.7500 |
+| malpa   |    349.0000 |
++---------+-------------+
+
+SELECT rodzaj, sum(waga*ilosc) as suma FROM zasob GROUP BY rodzaj;
++--------------------+--------+
+| rodzaj             | suma   |
++--------------------+--------+
+| jedzenie           | 239.00 |
+| narzedzie          |  13.00 |
+| NULL               |  61.00 |
+| ubranie            | 323.00 |
+| narzedzie zbrodni  |  26.00 |
+| material budowlany |  90.00 |
+| miejsce wypoczynku |   4.00 |
++--------------------+--------+
+
+SELECT nazwa, avg(waga) as srednia_waga FROM zasob WHERE ilosc >=4 GROUP BY nazwa HAVING sum(waga)>10;
++---------------+--------------+
+| nazwa         | srednia_waga |
++---------------+--------------+
+| skora geparda |    30.000000 |
++---------------+--------------+
+
+SELECT COUNT(DISTINCT nazwa) ,rodzaj FROM zasob GROUP BY rodzaj  HAVING min(ilosc)>1;
++-----------------------+--------------------+
+| COUNT(DISTINCT nazwa) | rodzaj             |
++-----------------------+--------------------+
+|                     2 | material budowlany |
+|                     4 | ubranie            |
+
++-----------------------+--------------------+
+
+SELECT COUNT(ekwipunek.ilosc), kreatura.nazwa FROM ekwipunek, kreatura WHERE kreatura.idKreatury=ekwipunek.idKreatury GROUP BY kreatura.nazwa ;
++------------------------+-----------+
+| COUNT(ekwipunek.ilosc) | nazwa     |
++------------------------+-----------+
+|                      7 | Bjorn     |
+|                      2 | Brutal    |
+|                      3 | Astrid    |
+|                      1 | Khorad    |
+|                      2 | Ibra      |
+|                      4 | Tesciowa  |
+|                      4 | Defgard   |
+|                      2 | Bjolkolur |
+|                      1 | Drozd     |
+|                      1 | Szczeki   |
++------------------------+-----------+
+
+SELECT  kreatura.nazwa, zasob.nazwa FROM ekwipunek, kreatura, zasob WHERE kreatura.idKreatury=ekwipunek.idKreatury AND ekwipunek.idZasobu=zasob.idZasobu  ORDER BY kreatura.nazwa;
++-----------+-------------------+
+| nazwa     | nazwa             |
++-----------+-------------------+
+| Astrid    | stanik            |
+| Astrid    | luk               |
+| Astrid    | kokos             |
+| Bjolkolur | deski             |
+| Bjolkolur | pnacza            |
+| Bjorn     | stanik            |
+| Bjorn     | topor             |
+| Bjorn     | siekiera          |
+| Bjorn     | kokos             |
+| Bjorn     | buty              |
+| Bjorn     | lisc palmowy      |
+| Bjorn     | hamak             |
+| Brutal    | siekiera          |
+| Brutal    | kokos             |
+| Defgard   | kiel slonia       |
+| Defgard   | siekiera          |
+| Defgard   | pnacza            |
+| Defgard   | skora geparda     |
+| Drozd     | stanik            |
+| Ibra      | dzida             |
+| Ibra      | skora geparda     |
+| Khorad    | kiel slonia       |
+| Szczeki   | opos              |
+| Tesciowa  | nie wiadomo co    |
+| Tesciowa  | miotla            |
+| Tesciowa  | chatka na drzewie |
+| Tesciowa  | ogien do ziania   |
++-----------+-------------------+
+
+SELECT k.nazwa FROM kreatura as k LEFT JOIN ekwipunek as e ON k.idKreatury=e.idKreatury WHERE e.idKreatury IS NULL ;
++----------------------------+
+| nazwa                      |
++----------------------------+
+| Birgun                     |
+| Nemo                       |
+| Loko                       |
+| Ara                        |
+| Tiki                       |
+| Dziadek                    |
+| sztuczna szczeka tesciowej |
+| Tesciowa dziadka           |
+| Babajaga                   |
++----------------------------+
+
+SELECT DISTINCT k.nazwa, z.nazwa FROM kreatura as k INNER JOIN ekwipunek as e ON k.idKreatury=e.idKreatury INNER JOIN zasob as z ON e.idZasobu=z.idZasobu WHERE k.rodzaj LIKE 'wiking' AND k.dataUR BETWEEN '1670-01-01' AND '1679-12-31';
++-----------+---------------+
+| nazwa     | nazwa         |
++-----------+---------------+
+| Bjorn     | kokos         |
+| Bjorn     | stanik        |
+| Bjorn     | buty          |
+| Bjorn     | lisc palmowy  |
+| Bjorn     | siekiera      |
+| Bjorn     | hamak         |
+| Bjorn     | topor         |
+| Brutal    | siekiera      |
+| Brutal    | kokos         |
+| Khorad    | kiel slonia   |
+| Defgard   | kiel slonia   |
+| Defgard   | siekiera      |
+| Defgard   | pnacza        |
+| Defgard   | skora geparda |
+| Astrid    | kokos         |
+| Astrid    | luk           |
+| Astrid    | stanik        |
+| Ibra      | skora geparda |
+| Ibra      | dzida         |
+| Bjolkolur | pnacza        |
+| Bjolkolur | deski         |
++-----------+---------------+
+
+ SELECT k.nazwa FROM kreatura as k INNER JOIN ekwipunek as e ON k.idKreatury=e.idKreatury INNER JOIN zasob as z ON e.idZasobu=z.idZasobu WHERE z.rodzaj LIKE 'jedzenie' ORDER BY k.dataUR LIMIT 5;
++---------+
+| nazwa   |
++---------+
+| Bjorn   |
+| Brutal  |
+| Szczeki |
+| Astrid  |
++---------+
+
+SELECT k.nazwa,kk.nazwa FROM kreatura as k, kreatura as kk WHERE k.idKreatury=5+kk.idKreatury ORDER BY k.nazwa;
++----------------------------+-----------+
+| nazwa                      | nazwa     |
++----------------------------+-----------+
+| Ara                        | Ibra      |
+| Astrid                     | Bjorn     |
+| Bjolkolur                  | Khorad    |
+| Drozd                      | Astrid    |
+| Dziadek                    | Drozd     |
+| Ibra                       | Brutal    |
+| Loko                       | Defgard   |
+| Nemo                       | Birgun    |
+| Szczeki                    | Bjolkolur |
+| sztuczna szczeka tesciowej | Ara       |
+| Tesciowa                   | Nemo      |
+| Tesciowa dziadka           | Szczeki   |
+| Tiki                       | Loko      |
++----------------------------+-----------+
+
+SELECT k.rodzaj, ROUND(AVG(z.waga*z.ilosc),2) as srednia_waga FROM kreatura as k INNER JOIN ekwipunek as
+e ON k.idKreatury=e.idKreatury INNER JOIN zasob as z ON e.idZasobu=z.idZasobu WHERE k.rodzaj NOT LIKE 'malpa' AN
+D k.rodzaj NOT LIKE 'waz' GROUP BY k.rodzaj HAVING COUNT(z.idZasobu)<30;
++---------+--------------+
+| rodzaj  | srednia_waga |
++---------+--------------+
+| wiking  |        37.48 |
+| wiedzma |         3.25 |
+| ptak    |            8 |
+| ryba    |           24 |
++---------+--------------+
+
+SELECT k.nazwa,k.rodzaj,k.dataUr FROM kreatura as k,(SELECT rodzaj,MIN(dataUr) as min,MAX(dataUr) as max FROM kreatura as kk GROUP BY rodzaj)as pod_z WHERE k.rodzaj=pod_z.rodzaj AND k.dataUr=pod_z.min OR k.dataUr=pod_z.max;
++----------------------------+---------+------------+
+| nazwa                      | rodzaj  | dataUr     |
++----------------------------+---------+------------+
+| Dziadek                    | wiking  | 1645-01-23 |
+| Astrid                     | wiking  | 1677-08-18 |
+| Szczeki                    | ryba    | 1674-04-06 |
+| Nemo                       | ryba    | 1677-10-02 |
+| Loko                       | waz     | 1677-10-05 |
+| Ara                        | ptak    | 1676-05-05 |
+| Drozd                      | ptak    | 1675-07-07 |
+| Babajaga                   | wiedzma | 1000-01-01 |
+| sztuczna szczeka tesciowej | wiedzma | 1680-08-13 |
+| Tiki                       | malpa   | 1672-08-08 |
++----------------------------+---------+------------+
+
+
+
+
