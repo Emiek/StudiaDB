@@ -1,0 +1,165 @@
+CREATE TABLE uczestnicy LIKE wikingowie.uczestnicy;
+CREATE TABLE etapy_wyprawy LIKE wikingowie.etapy_wyprawy;
+CREATE TABLE sektor LIKE wikingowie.sektor;
+CREATE TABLE wyprawa LIKE wikingowie.wyprawa;
+
+INSERT INTO uczestnicy SELECT * from wikingowie.uczestnicy;
+INSERT INTO etapy_wyprawy SELECT * from wikingowie.etapy_wyprawy;
+INSERT INTO sektor SELECT * from wikingowie.sektor;
+INSERT INTO wyprawa SELECT * from wikingowie.wyprawa;
+
+SELECT k.nazwa FROM kreatura as k LEFT OUTER JOIN uczestnicy as u ON k.idKreatury=u.id_uczestnika WHERE u.id_uczestnika IS NULL;
++----------+
+| nazwa    |
++----------+
+| Brutal   |
+| Defgard  |
+| Ara      |
+| Babajaga |
++----------+
+
+ SELECT w.nazwa, count(e.ilosc) as ilosc_ekwipunku FROM wyprawa as w JOIN
+uczestnicy as u ON w.id_wyprawy=u.id_wyprawy JOIN kreatura as k ON k.idKreatury=u.id_uczestnika JOIN ekwipunek as e ON k.idKreatury=e.idKreatury GROUP BY w.nazw
+a;
++-----------------------+-----------------+
+| nazwa                 | ilosc_ekwipunku |
++-----------------------+-----------------+
+| Poszukiwanie ziecia   |               4 |
+| Polowanie na tesciowa |              11 |
+| Nakarm kanibala       |              14 |
++-----------------------+-----------------+
+
+SELECT w.nazwa, count(u.id_uczestnika) as liczba_uczestnikow, GROUP_CONCAT(k.nazwa) as uczestnicy FROM wyprawa AS w JOIN uczestnicy AS u ON w.id_wyprawy=u.id_wyprawy JOI
+N kreatura as k ON k.idKreatury=u.id_uczestnika GROUP BY w.nazwa;
++-----------------------+--------------------+----------------------------------------------------------------+
+| nazwa                 | liczba_uczestnikow | uczestnicy                                                     |
++-----------------------+--------------------+----------------------------------------------------------------+
+| Nakarm kanibala       |                  6 | Bjorn,Khorad,Astrid,Bjolkolur,Drozd,Dziadek                    |
+| Polowanie na tesciowa |                  7 | Bjorn,Birgun,Ibra,Loko,Drozd,Szczeki,Dziadek                   |
+| Poszukiwanie ziecia   |                  5 | Nemo,Tesciowa,Tiki,sztuczna szczeka tesciowej,Tesciowa dziadka |
++-----------------------+--------------------+----------------------------------------------------------------+
+
+SELECT w.nazwa, etap.kolejnosc, s.nazwa, k.nazwa FROM wyprawa as w JOIN etapy_wyprawy as etap ON w.id_wyprawy=etap.idWyprawy JOIN sektor as s ON s.id_sektora=etap.sektor JOIN uczestnicy as u ON u.id_uczestnika=w.kierownik JOIN kreatura as k ON k.idKreatury=u.id_uczestnika ORDER BY w.data_rozpoczecia, etap.kolejnosc;
++-----------------------+-----------+--------------------+----------+
+| nazwa                 | kolejnosc | nazwa              | nazwa    |
++-----------------------+-----------+--------------------+----------+
+| Poszukiwanie ziecia   |         1 | Pieczara tesciowej | Tesciowa |
+| Nakarm kanibala       |         1 | Chatka dziadka     | Dziadek  |
+| Nakarm kanibala       |         1 | Chatka dziadka     | Dziadek  |
+| Poszukiwanie ziecia   |         2 | Wulkan             | Tesciowa |
+| Nakarm kanibala       |         2 | Pieczara tesciowej | Dziadek  |
+| Nakarm kanibala       |         2 | Pieczara tesciowej | Dziadek  |
+| Poszukiwanie ziecia   |         3 | Wioska Kanibali    | Tesciowa |
+| Nakarm kanibala       |         3 | Zatoka rekinow     | Dziadek  |
+| Nakarm kanibala       |         3 | Zatoka rekinow     | Dziadek  |
+| Poszukiwanie ziecia   |         4 | Pieprzne pole      | Tesciowa |
+| Nakarm kanibala       |         4 | Wulkan             | Dziadek  |
+| Nakarm kanibala       |         4 | Wulkan             | Dziadek  |
+| Nakarm kanibala       |         5 | Wioska Kanibali    | Dziadek  |
+| Nakarm kanibala       |         5 | Wioska Kanibali    | Dziadek  |
+| Poszukiwanie ziecia   |         5 | Chatka dziadka     | Tesciowa |
+| Polowanie na tesciowa |         1 | Kokosowa plaza     | Bjorn    |
+| Polowanie na tesciowa |         1 | Kokosowa plaza     | Bjorn    |
+| Polowanie na tesciowa |         2 | Chatka dziadka     | Bjorn    |
+| Polowanie na tesciowa |         2 | Chatka dziadka     | Bjorn    |
+| Polowanie na tesciowa |         3 | Wulkan             | Bjorn    |
+| Polowanie na tesciowa |         3 | Wulkan             | Bjorn    |
+| Polowanie na tesciowa |         4 | Zatoka rekinow     | Bjorn    |
+| Polowanie na tesciowa |         4 | Zatoka rekinow     | Bjorn    |
+| Polowanie na tesciowa |         5 | Pieczara tesciowej | Bjorn    |
+| Polowanie na tesciowa |         5 | Pieczara tesciowej | Bjorn    |
++-----------------------+-----------+--------------------+----------+
+
+SELECT s.nazwa, count(etap.sektor) as ilosc_odwiedzin FROM sektor as s LEFT JOIN etapy_wyprawy as etap ON s.id_sektora=etap.sektor LEFT JOIN wyprawa as w ON w.id_wyprawy=etap.idWyprawy GROUP BY s.nazwa;
++--------------------+-----------------+
+| nazwa              | ilosc_odwiedzin |
++--------------------+-----------------+
+| Wioska Kanibali    |               2 |
+| Zabojcza skala     |               0 |
+| Magiczna jaskinia  |               0 |
+| Pieprzne pole      |               1 |
+| Wulkan             |               3 |
+| Pieczara tesciowej |               3 |
+| Chatka dziadka     |               3 |
+| Kokosowa plaza     |               1 |
+| Zatoka rekinow     |               2 |
++--------------------+-----------------+
+9 rows in set (0.00 sec)
+
+SELECT k.nazwa, IF(count(w.id_wyprawy)>0,"bral udzial w wyprawie","nie bral udzialy w wyprawie")as Czy_bral_udzial  FROM kreatura as k LEFT JOIN uczestnicy as u ON u.id_uczestnika=k.idKreatury LEFT JOIN wyprawa as w ON w.id_wyprawy=u.id_wyprawy GROUP BY k.nazwa;
++----------------------------+-----------------------------+
+| nazwa                      | Czy_bral_udzial             |
++----------------------------+-----------------------------+
+| Bjorn                      | bral udzial w wyprawie      |
+| Brutal                     | nie bral udzialy w wyprawie |
+| Khorad                     | bral udzial w wyprawie      |
+| Birgun                     | bral udzial w wyprawie      |
+| Defgard                    | nie bral udzialy w wyprawie |
+| Astrid                     | bral udzial w wyprawie      |
+| Ibra                       | bral udzial w wyprawie      |
+| Bjolkolur                  | bral udzial w wyprawie      |
+| Nemo                       | bral udzial w wyprawie      |
+| Loko                       | bral udzial w wyprawie      |
+| Drozd                      | bral udzial w wyprawie      |
+| Ara                        | nie bral udzialy w wyprawie |
+| Szczeki                    | bral udzial w wyprawie      |
+| Tesciowa                   | bral udzial w wyprawie      |
+| Tiki                       | bral udzial w wyprawie      |
+| Dziadek                    | bral udzial w wyprawie      |
+| sztuczna szczeka tesciowej | bral udzial w wyprawie      |
+| Tesciowa dziadka           | bral udzial w wyprawie      |
+| Babajaga                   | nie bral udzialy w wyprawie |
++----------------------------+-----------------------------+
+19 rows in set (0.00 sec)
+
+SELECT w.nazwa,SUM(LENGTH(etap.dziennik)) as liczba_znakow FROM wyprawa as w JOIN etapy_wyprawy as etap ON
+w.id_wyprawy=etap.idWyprawy GROUP BY w.nazwa HAVING liczba_znakow<400;
++-----------------------+---------------+
+| nazwa                 | liczba_znakow |
++-----------------------+---------------+
+| Poszukiwanie ziecia   |           344 |
+| Polowanie na tesciowa |           310 |
++-----------------------+---------------+
+2 rows in set (0.00 sec)
+
+SELECT w.nazwa, ROUND(SUM(z.waga*z.ilosc)/COUNT(id_uczestnika),2) as srednia_waga FROM wyprawa as w JOIN uc
+zestnicy as u ON w.id_wyprawy=u.id_wyprawy JOIN kreatura as k ON k.idKreatury=u.id_uczestnika JOIN ekwipunek as e
+ON e.idKreatury=k.idKreatury JOIN zasob as z ON z.idZasobu=e.idZasobu GROUP BY w.nazwa;
++-----------------------+--------------+
+| nazwa                 | srednia_waga |
++-----------------------+--------------+
+| Poszukiwanie ziecia   |         3.25 |
+| Polowanie na tesciowa |        37.64 |
+| Nakarm kanibala       |        19.71 |
++-----------------------+--------------+
+3 rows in set (0.00 sec)
+
+
+
+
+SELECT k.nazwa, DATEDIFF(w.data_rozpoczecia,k.dataUR) as wiek_w_dniach FROM kreatura as k JOIN uczestnicy as u ON u.id_uczestnika=k.idKreatury JOIN wyprawa as w ON w.id_wyprawy=u.id_wyprawy JOIN etapy_wyprawy as etap ON etap.idWyprawy=w.id_wyprawy JOIN sektor as s ON s.id_sektora=etap.sektor WHERE s.nazwa LIKE "Chatka dziadka";
++----------------------------+---------------+
+| nazwa                      | wiek_w_dniach |
++----------------------------+---------------+
+| Nemo                       |          8339 |
+| Tesciowa                   |         16376 |
+| Tiki                       |         10220 |
+| sztuczna szczeka tesciowej |          7293 |
+| Tesciowa dziadka           |         25661 |
+| Bjorn                      |         11082 |
+| Birgun                     |          9216 |
+| Ibra                       |          9678 |
+| Loko                       |          8338 |
+| Drozd                      |          9159 |
+| Szczeki                    |          9616 |
+| Dziadek                    |         20281 |
+| Bjorn                      |         11080 |
+| Khorad                     |         10610 |
+| Astrid                     |          8384 |
+| Bjolkolur                  |          8890 |
+| Drozd                      |          9157 |
+| Dziadek                    |         20279 |
++----------------------------+---------------+
+18 rows in set (0.00 sec)
+
+
