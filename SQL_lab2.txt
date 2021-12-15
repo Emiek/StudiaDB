@@ -1,0 +1,150 @@
+1. SELECT nazwisko FROM pracownik ORDER BY nazwisko;
++--------------+
+| nazwisko     |
++--------------+
+| Adamski      |
+| Ananas       |
+| Cezary       |
+| Dziobak      |
+| Frankiewicz  |
+| Go?dzik      |
+| Guziec       |
+| K?kol        |
+| Kalova       |
+| Ka?amaga     |
+| Kielich      |
+| Klimaszewski |
+| Klusek       |
+| Kogut        |
+| Koniuszko    |
+| Kowalska     |
+| Koz?owska    |
+| Malajkat     |
+| Malinowska   |
+| Marchewka    |
+| Michalak     |
+| Miedziak     |
+| Paliwoda     |
+| Pierzchalska |
+| Poczakowska  |
+| Trocik       |
+| Trocik       |
+| Uzna?        |
+| W?sek        |
+| Wiaterek     |
+| Wojna        |
++--------------+
+
+2. SELECT imie, nazwisko, pensja FROM pracownik WHERE YEAR(data_urodzenia)>1979;
++------------+--------------+---------+
+| imie       | nazwisko     | pensja  |
++------------+--------------+---------+
+| Agata      | Malinowska   | 2780.00 |
+| Zbigniew   | Malajkat     | 2780.00 |
+| Andrzej    | Kogut        | 2780.00 |
+| Katarzyna  | Wiaterek     | 3100.00 |
+| Helena     | Kowalska     | 3100.00 |
+| Oksana     | Kalova       | 2600.00 |
+| Micha?     | Ka?amaga     | 2450.00 |
+| Stanis?aw  | Koniuszko    | 2450.00 |
+| Aleksandra | Poczakowska  | 2600.00 |
+| Ma?gorzata | Koz?owska    | 2600.00 |
+| Piotr      | Trocik       | 2780.00 |
+| Micha?     | W?sek        | 2350.00 |
+| Krzysztof  | Ananas       | 3800.00 |
+| Andrzej    | Michalak     | 2670.00 |
+| Pawe?      | Klimaszewski | 2670.00 |
+| Artur      | Trocik       | 3300.00 |
+| Wiktor     | Guziec       | 2350.00 |
+| Katarzyna  | Klusek       | 3100.00 |
+| Wojciech   | Adamski      | 2780.00 |
+| Piotr      | Marchewka    | 3200.00 |
+| Jakub      | Uzna?        | 2450.00 |
++------------+--------------+---------+
+
+3.  SELECT * FROM pracownik WHERE pensja BETWEEN 3500 AND 5000;
++---------------+-----------+--------------+---------+----------------+-------------------+-------+
+| id_pracownika | imie      | nazwisko     | pensja  | data_urodzenia | data_zatrudnienia | dzial |
++---------------+-----------+--------------+---------+----------------+-------------------+-------+
+|            16 | Krzysztof | Ananas       | 3800.00 | 1984-12-12     | 2008-07-01        |     2 |
+|            18 | Olga      | Miedziak     | 4200.00 | 1975-02-18     | 2008-03-01        |     1 |
+|            25 | Agata     | K?kol        | 3800.00 | 1974-02-10     | 2019-03-01        |     5 |
+|            28 | Danuta    | Pierzchalska | 4100.00 | 1975-08-31     | 2009-12-01        |     5 |
++---------------+-----------+--------------+---------+----------------+-------------------+-------+
+
+4.SELECT towar FROM stan_magazynowy WHERE ilosc>10;
+
+5. SELECT nazwa_towaru FROM towar WHERE nazwa_towaru LIKE 'A%' OR nazwa_towaru LIKE 'B%' OR nazwa_towaru LIKE 'C%';
++-----------------------------+
+| nazwa_towaru                |
++-----------------------------+
+| Carcassone                  |
+| Catan                       |
+| Azul                        |
+| Cywilizacja. Poprzez wieki. |
+| Cortex                      |
+| Agricola                    |
+| Baldur's Gate 2             |
+| Breloczek                   |
+| Aceton                      |
++-----------------------------+
+
+6.SELECT * FROM klient WHERE czy_firma =0;
+
+7. SELECT * FROM zamowienie ORDER BY data_zamowienia DESC LIMIT 10 ;
++---------------+-----------------+------------------+-------------------+-------------------------+--------+
+| id_zamowienia | data_zamowienia | numer_zamowienia | status_zamowienia | pracownik_id_pracownika | klient |
++---------------+-----------------+------------------+-------------------+-------------------------+--------+
+|           391 | 2020-01-21      | 5/1/2020         |                 4 |                      16 |     80 |
+|           390 | 2020-01-10      | 4/1/2020         |                 4 |                      16 |     91 |
+|           389 | 2020-01-02      | 3/1/2020         |                 4 |                      14 |     85 |
+|           388 | 2019-12-23      | 2/12/2019        |                 3 |                      16 |     36 |
+|           387 | 2019-12-10      | 1/12/2019        |                 3 |                      16 |      7 |
+|           386 | 2019-11-26      | 3/11/2019        |                 3 |                       5 |     64 |
+|           385 | 2019-11-17      | 2/11/2019        |                 5 |                       6 |     84 |
+|           384 | 2019-11-05      | 1/11/2019        |                 5 |                      22 |     77 |
+|           383 | 2019-10-21      | 3/10/2019        |                 5 |                      26 |     96 |
+|           382 | 2019-10-13      | 2/10/2019        |                 5 |                       3 |     28 |
++---------------+-----------------+------------------+-------------------+-------------------------+--------+
+
+8. SELECT imie, nazwisko,pensja FROM pracownik ORDER BY pensja LIMIT 5;
++---------+----------+---------+
+| imie    | nazwisko | pensja  |
++---------+----------+---------+
+| Wiktor  | Guziec   | 2350.00 |
+| Artur   | Dziobak  | 2350.00 |
+| Wies?aw | Go?dzik  | 2350.00 |
+| Piotr   | Wojna    | 2350.00 |
+| Micha?  | W?sek    | 2350.00 |
++---------+----------+---------+
+
+9. SELECT nazwa_towaru, cena_zakupu FROM towar WHERE nazwa_towaru NOT LIKE '%a%' ORDER BY cena_zakupu DESC LIMIT 10;
++-----------------------+-------------+
+| nazwa_towaru          | cena_zakupu |
++-----------------------+-------------+
+| Xbox One              |     1350.00 |
+| Nintendo Switch       |      999.00 |
+| Scythe                |      229.00 |
+| Dixit                 |      137.00 |
+| Monopoly              |      119.00 |
+| Domek                 |       89.00 |
+| Cortex                |       49.00 |
+| Wied?min 3: Dziki Gon |       49.00 |
+| Settlers 2            |       19.00 |
+| Puzzle Pieski         |       13.00 |
++-----------------------+-------------+
+
+10. SELECT nazwa_towaru, miara.nazwa, cena_zakupu  FROM towar AS t JOIN stan_magazynowy AS stan ON stan.towar=t.id_towaru JOIN jednostka_miary AS miara ON miara.id_jednostki=stan.jm WHERE miara.nazwa LIKE 'szt' ORDER BY nazwa_towaru,cena_zakupu DESC ;
+
+11. CREATE TABLE towary_powyzej_100 SELECT * FROM __firma_zti.towar WHERE cena_zakupu >=100;
+
+12. INSERT INTO pracownik_50_plus SELECT * FROM __firma_zti.pracownik WHERE YEAR(NOW())-YEAR(data_urodzenia)>=50;
+
+czêœæ 2
+1. SELECT p.imie, p.nazwisko, dz.nazwa FROM pracownik AS p JOIN dzial AS dz ON dz.id_dzialu=p.dzial;
+
+2. SELECT nazwa_towaru, nazwa_kategori, stan.ilosc FROM towar AS t JOIN stan_magazynowy AS stan ON stan.towar=t.id_towaru JOIN kategoria AS k ON k.id_kategori=t.kategoria ORDER BY stan.ilosc DESC;
+
+3. SELECT numer_zamowienia  FROM zamowienie AS z JOIN status_zamowienia AS status ON status.id_statusu_zamowienia=z.status_zamowienia WHERE nazwa_statusu_zamowienia ='anulowane';
+
+
