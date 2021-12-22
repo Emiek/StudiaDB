@@ -1,0 +1,15 @@
+1. SELECT imie, nazwisko, YEAR(data_urodzenia) FROM pracownik;
+
+2.SELECT imie, nazwisko, YEAR(NOW())-YEAR(data_urodzenia) AS wiek FROM pracownik;
+
+3.SELECT nazwa AS nazwa_dzialu, count(dzial) AS liczba_pracownikow FROM dzial JOIN pracownik AS p ON p.dzial=dzial.id_dzialu GROUP BY nazwa;
++--------------+--------------------+
+| nazwa_dzialu | liczba_pracownikow |
++--------------+--------------------+
+| ksi?gowo??   |                  3 |
+| sprzeda?     |                 10 |
+| magazyn      |                 12 |
+| bok          |                  4 |
+| kadry        |                  2 |
++--------------+--------------------+
+5 rows in set (0.00 sec)
